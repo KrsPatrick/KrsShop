@@ -1,4 +1,5 @@
 const CryptoJS = require('crypto-js')
+const jwt = require('jsonwebtoken')
 
 const {createNewUser, getUserByUsername} = require('../../models/user.model')
 
@@ -36,15 +37,20 @@ async function loginUser(req, res){
     const decryptedPassword = CryptoJS.AES.decrypt(user.password, process.env.ENCPASS);
     const originalPassword = decryptedPassword.toString(CryptoJS.enc.Utf8)
 
-    console.log(originalPassword)
-
     if (data.password !== originalPassword){
         return res.status(400).json({
             message: "wrong username or password test"
         })
     }
 
-    return res.status(200).json(user)
+    const accessToken = jwt.sign({
+        id: user._id,
+        isAdmin: user.isAdmin
+    }, 
+    process.env.JWT_SECRET_KEY,
+    {expiresIn: "3d"})
+
+    return res.status(200).json({user, accessToken})
 }
 
 module.exports = {
