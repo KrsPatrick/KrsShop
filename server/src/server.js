@@ -1,5 +1,6 @@
 const http = require('http')
 const mongoose = require('mongoose')
+const { userInfo } = require('os')
 require('dotenv').config()
 
 const app = require('./app')
@@ -22,6 +23,8 @@ async function serverStart(){
 
     server.listen(PORT, () => {
     console.log(`server is listen on port: ${PORT}`)
+
+    
 })
 }
 

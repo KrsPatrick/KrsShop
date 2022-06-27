@@ -1,7 +1,7 @@
 const CryptoJS = require('crypto-js')
 const jwt = require('jsonwebtoken')
 
-const {createNewUser, getUserByUsername} = require('../../models/user.model')
+const {createNewUser, getUserByUsername, getUserMail} = require('../../models/user.model')
 
 // Create New User
 
@@ -11,6 +11,23 @@ async function httpCreateNewUser(req, res){
     if (!user.username || !user.email || !user.password) {
         return res.status(400).json({ 
             error: 'Missing required property'
+        })
+    }
+
+    const dbUser = await getUserByUsername(user.username)
+    const mail = await getUserMail(user.email)
+
+    console.log(dbUser);
+
+    if(dbUser){
+        return res.status(400).json({
+            "message": "username already taken!"
+        })
+    }
+
+    if(mail){
+        return res.status(400).json({
+            "message": "email already in use!"
         })
     }
 
@@ -50,7 +67,7 @@ async function loginUser(req, res){
     process.env.JWT_SECRET_KEY,
     {expiresIn: "3d"})
 
-    return res.status(200).json({user, accessToken})
+    return res.status(200).json({accessToken})
 }
 
 module.exports = {
