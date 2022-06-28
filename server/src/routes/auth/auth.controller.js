@@ -17,13 +17,12 @@ async function httpCreateNewUser(req, res){
     const dbUser = await getUserByUsername(user.username)
     const mail = await getUserMail(user.email)
 
-    console.log(dbUser);
-
     if(dbUser){
         return res.status(400).json({
             "message": "username already taken!"
         })
     }
+
 
     if(mail){
         return res.status(400).json({

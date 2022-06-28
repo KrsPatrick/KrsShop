@@ -21,6 +21,8 @@ mongoose.connection.on('error', (err) => {
 async function serverStart(){
     await mongoose.connect(MONGO_URL)
 
+    // mongoose.connection.db.dropCollection('users')
+
     server.listen(PORT, () => {
     console.log(`server is listen on port: ${PORT}`)
 

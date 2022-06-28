@@ -29,7 +29,51 @@ async function deleteUser(req, res){
     }
 
     await User.findByIdAndDelete(req.params.id)
-    return res.status(200).json({})
+    return res.status(200).json({"message": "User was deleted"})
+}
+
+// Get User
+
+async function getUser(req, res){
+    const user = await User.findById(req.params.id)
+    if (!user){
+        return res.status(400).json({
+            "message": "no such user"
+        })
+    }
+    return res.status(200).json({user})
+}
+
+// Get all User
+
+async function getAllUser(req, res){
+    const users = await User.find()
+    
+    return res.status(200).json({users})
+}
+
+// Get user stats
+
+async function getUserStats(req, res){
+    const date = new Date()
+    const lastYear = new Date(date.setFullYear(date.getFullYear() - 1))
+
+    const data = await User.aggregate([
+        {$match: {createdAt: {$gte: lastYear}}},
+        {
+            $project: {
+                month: {$month: "$createdAt"}
+            },        
+        },
+        {
+            $group: {
+                _id: "$month",
+                total: { $sum: 1}
+            }
+        }
+    ])
+
+    res.status(200).json({data})
 }
 
 // Test User
@@ -41,4 +85,7 @@ async function deleteUser(req, res){
 module.exports = {
     updateUser,
     deleteUser,
+    getUser,
+    getAllUser,
+    getUserStats,
 }
