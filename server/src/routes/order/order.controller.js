@@ -45,7 +45,7 @@ async function deleteOrder(req, res){
 // Get User Orders
 
 async function getUserOrder(req, res){
-    const orders = await Order.find({userId: req.patams.userId})
+    const orders = await Order.find({userId: req.params.userId})
     if (!orders){
         return res.status(400).json({
             "message": "no orders"
@@ -58,7 +58,7 @@ async function getUserOrder(req, res){
 
 async function getAllOrders(req, res){
     try {
-        const orders = await Orders.find()
+        const orders = await Order.find()
         res.status(200).json({"orders": orders})
     } catch(err){
         res.status(500).json({"error": err})
@@ -70,7 +70,7 @@ async function getAllOrders(req, res){
 async function getMonthlyIncome(req, res){
     const date = new Date()
     const lastMonth = new Date(date.setMonth(date.getMonth()-1))
-    const previousMonth = new Date(newDate().setMonth(lastMonth.getMonth()-1))
+    const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth()-1))
 
     const income = await Order.aggregate([
         {$match: {createdAt:{$gte: previousMonth}}},
@@ -79,11 +79,12 @@ async function getMonthlyIncome(req, res){
             month: {$month: "$createdAt"},
             sales:"$amount"
             },
-            
-                $group: {
-                    _id:"$month",
-                    total:{$sum: "$sales"}
-                },
+        },
+        {            
+            $group: {
+                 _id:"$month",
+                total:{$sum: "$sales"}
+            },
 
         },
     ])
@@ -92,9 +93,10 @@ async function getMonthlyIncome(req, res){
     
 
 module.exports = {
-    createCart,
-    updateCart,
-    deleteCart,
-    getUserCart,
-    getAll
+    createOrder,
+    updateOrder,
+    deleteOrder,
+    getUserOrder,
+    getAllOrders,
+    getMonthlyIncome,
 }

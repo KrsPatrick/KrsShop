@@ -6,8 +6,8 @@ const productRouter = express.Router()
 
 productRouter.get('/', getAllProducts)
 productRouter.post('/', verifyIfAdmin, createProduct)
-productRouter.get('/:id', getProduct)
-productRouter.delete('/:id', deleteProduct)
+productRouter.get('/:id', verifyIfAdmin, getProduct)
+productRouter.delete('/:id', verifyIfAdmin, deleteProduct)
 productRouter.put('/:id', verifyIfAdmin, updateProduct)
 
 module.exports = productRouter
