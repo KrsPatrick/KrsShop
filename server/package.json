@@ -12,6 +12,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "crypto-js": "^4.1.1",
     "dotenv": "^16.0.1",
@@ -20,8 +23,5 @@
     "mongoose": "^6.4.0",
     "nodemon": "^2.0.18",
     "stripe": "^9.10.0"
-  },
-  "devDependencies": {
-    "jest": "^28.1.2"
   }
 }
