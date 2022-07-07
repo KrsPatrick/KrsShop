@@ -6,11 +6,16 @@ on:
     branches: [main]
 jobs:
   build:
+    env:
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v2
         with:
-          node-verion: '16'
+          node-verion: ${{matrix.node-version}}
       - run: npm install --prefix server
+      - run: npm test
       
